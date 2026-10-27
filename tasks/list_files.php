@@ -1,0 +1,1 @@
+<?php require '../config.php';$dir=__DIR__;?><h1>Files in tasks directory</h1><ul><?php foreach(scandir($dir) as $f){if($f==='.'||$f==='..')continue;?><li><?=h($f)?></li><?php }?></ul><a href="../index.php">Home</a>

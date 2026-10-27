@@ -1,0 +1,13 @@
+<?php require 'config.php'; ?>
+<!doctype html><html><head><meta charset="utf-8"><title>PHP Shopping Cart</title>
+<style>body{font:16px Arial;max-width:1000px;margin:25px auto;padding:0 15px}a,button{cursor:pointer}nav a{margin-right:12px}.layout{display:grid;grid-template-columns:200px 1fr;gap:20px}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{border:1px solid #ddd;padding:12px}.card img{max-width:100%;height:130px;object-fit:contain}button{padding:6px 10px}</style></head><body>
+<h1>Simple PHP Shopping Cart</h1><nav><a href="cart.php">Cart</a><a href="admin/login.php">Admin login</a><a href="register.php">Register</a><a href="login.php">User login</a><a href="tasks/import_xml.php">Import XML</a><a href="tasks/export_xml.php">Export XML</a><a href="tasks/list_files.php">List files</a></nav>
+<p>Choose a category. Products load with AJAX and pagination.</p><div class="layout"><aside><h3>Categories</h3><div id="categories">Loading...</div></aside><main><h2 id="heading">All products</h2><div id="products" class="products"></div><p id="pages"></p></main></div>
+<script>
+let selectedCategory=0;
+async function loadCategories(){let r=await fetch('ajax/categories.php');let a=await r.json();document.getElementById('categories').innerHTML='<p><a href="#" data-id="0">All products</a></p>'+a.map(c=>`<p><a href="#" data-id="${c.id}">${esc(c.name)}</a></p>`).join('');document.querySelectorAll('#categories a').forEach(x=>x.onclick=e=>{e.preventDefault();selectedCategory=Number(x.dataset.id);document.getElementById('heading').textContent=x.textContent;loadProducts(1)})}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadProducts(page){let r=await fetch(`ajax/products.php?category=${selectedCategory}&page=${page}`);let d=await r.json();document.getElementById('products').innerHTML=d.items.map(p=>`<div class="card">${p.picture?`<img src="uploads/${encodeURIComponent(p.picture)}" alt="">`:''}<h3>${esc(p.name)}</h3><p>₹${Number(p.price).toFixed(2)}</p><button onclick="addCart(${p.id})">Add to cart</button></div>`).join('')||'<p>No products yet.</p>';document.getElementById('pages').innerHTML=Array.from({length:d.pages},(_,i)=>`<button onclick="loadProducts(${i+1})" ${i+1===d.page?'disabled':''}>${i+1}</button>`).join('')}
+async function addCart(id){let r=await fetch('cart_action.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'product_id='+encodeURIComponent(id)});let d=await r.json();alert(d.message);}
+loadCategories();loadProducts(1);
+</script></body></html>

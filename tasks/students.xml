@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+  <student><id>1</id><name>Rahul Patel</name><course>MSc ICT</course></student>
+  <student><id>2</id><name>Neha Shah</name><course>BCA</course></student>
+  <student><id>3</id><name>Amit Joshi</name><course>BSc IT</course></student>
+</students>

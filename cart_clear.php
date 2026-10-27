@@ -1,0 +1,1 @@
+<?php require 'config.php';unset($_SESSION['cart']);header('Location: cart.php');exit;?>

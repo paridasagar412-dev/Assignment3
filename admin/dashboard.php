@@ -1,0 +1,1 @@
+<?php require 'auth.php'; ?><h1>Admin Dashboard</h1><ul><li><a href="categories.php">Manage categories (CRUD)</a></li><li><a href="products.php">Manage products and images</a></li><li><a href="logout.php">Logout</a></li><li><a href="../index.php">View user site</a></li></ul>

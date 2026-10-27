@@ -1,0 +1,1 @@
+<?php require 'config.php';if(empty($_SESSION['user_id'])){header('Location: login.php');exit;}?><h1>Welcome, <?=h($_SESSION['user_name'])?></h1><p>You are logged in.</p><a href="user_logout.php">Logout</a>

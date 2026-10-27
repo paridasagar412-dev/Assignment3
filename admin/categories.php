@@ -1,0 +1,7 @@
+<?php
+require 'auth.php'; $msg='';
+if(isset($_POST['add']) && trim($_POST['name']??'')){try{$s=$pdo->prepare('INSERT INTO categories(name) VALUES(?)');$s->execute([trim($_POST['name'])]);$msg='Category added.';}catch(Exception $e){$msg='Category already exists or could not be added.';}}
+if(isset($_POST['update'])){$s=$pdo->prepare('UPDATE categories SET name=? WHERE id=?');$s->execute([trim($_POST['name']),(int)$_POST['id']]);$msg='Category updated.';}
+if(isset($_GET['delete'])){$s=$pdo->prepare('DELETE FROM categories WHERE id=?');$s->execute([(int)$_GET['delete']]);header('Location: categories.php');exit;}
+$cats=$pdo->query('SELECT * FROM categories ORDER BY id DESC')->fetchAll();
+?><h1>Manage Categories</h1><p><?=h($msg)?></p><form method="post"><input name="name" placeholder="Category name" required><button name="add">Add</button></form><table border="1" cellpadding="8"><tr><th>ID</th><th>Name</th><th>Update</th><th>Delete</th></tr><?php foreach($cats as $c):?><tr><td><?=$c['id']?></td><td><?=h($c['name'])?></td><td><form method="post"><input type="hidden" name="id" value="<?=$c['id']?>"><input name="name" value="<?=h($c['name'])?>" required><button name="update">Save</button></form></td><td><a href="?delete=<?=$c['id']?>" onclick="return confirm('Delete category and its products?')">Delete</a></td></tr><?php endforeach?></table><p><a href="dashboard.php">Dashboard</a></p>
